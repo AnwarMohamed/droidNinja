@@ -1,19 +1,21 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from core.interpreter.interpreter import Interpreter
 from core.interpreter import banner 
-from core.modules import ModulesHandler
-import os, argparse
+import os, argparse, sys
+import ConfigParser
+
+config = ConfigParser.ConfigParser()
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-i", "--interactive",help="interactive mode",action="store_true", default=0)
+parser.add_argument("-i", "--interactive",help="interactive mode",action="store_true", default=1)
 args = parser.parse_args()
 
 if args.interactive:
-	modulesHandler = ModulesHandler()
-	interpreter = Interpreter(modulesHandler)
+	interpreter = Interpreter()
 
 	os.system('clear')
 	print banner.randomGraphic()
-	print banner.devInfo(modulesHandler.modulesCount)
+	print banner.devInfo()
 	interpreter.start()
