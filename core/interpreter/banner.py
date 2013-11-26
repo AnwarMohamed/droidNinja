@@ -29,14 +29,6 @@ banners = ['''
 |  _  ||   _|  _  ||  ||  _  |       |  ||     ||  ||  _  |
 |_____||__| |_____||__||_____|__|____|__||__|__||  ||___._|
                                                |___|       ''' , '''
-     O))                         O))O)))     O))                            
-     O))                  O)     O))O) O))   O)) O)            O))          
-     O))O) O)))   O))            O))O)) O))  O))   O)) O))           O))    
- O)) O)) O))    O))  O)) O)) O)) O))O))  O)) O))O)) O))  O))   O)) O))  O)) 
-O)   O)) O))   O))    O))O))O)   O))O))   O) O))O)) O))  O))   O))O))   O)) 
-O)   O)) O))    O))  O)) O))O)   O))O))    O) ))O)) O))  O))   O))O))   O)) 
- O)) O))O)))      O))    O)) O)) O))O))      O))O))O)))  O))   O))  O)) O)))
-                                                            O)))            ''' , '''
      888               d8b     888888b    888d8b          d8b         
      888               Y8P     8888888b   888Y8P          Y8P         
      888                       88888888b  888                         
@@ -197,14 +189,7 @@ O   o   O     o   O O  O   o  o     Oo O   O   o   o o   O
    dMP VMP dMP.dMP dMP"dMP amr dMP VMP dMP dMP amr dMP dMP    dMP dMP"dMP 
   dMP dMP dMMMMK" dMP dMP dMP dMP dMP dMP dMP dMP dMP dMP    dMP dMMMMMP  
  dMP.aMP dMP"AMF dMP.aMP dMP dMP.aMP dMP dMP dMP dMP dMPdK .dMP dMP dMP   
-dMMMMP" dMP dMP  VMMMP" dMP dMMMMP" dMP dMP dMP dMP dMP VMMMP" dMP dMP    ''' , '''                                                                          
-     888                  ,e,      888 Y88b Y88 ,e,         ,e,         
- e88 888 888,8,  e88 88e   "   e88 888  Y88b Y8  "  888 8e   "   ,"Y88b 
-d888 888 888 "  d888 888b 888 d888 888 b Y88b Y 888 888 88b 888 "8" 888 
-Y888 888 888    Y888 888P 888 Y888 888 8b Y88b  888 888 888 888 ,ee 888 
- "88 888 888     "88 88"  888  "88 888 88b Y88b 888 888 888 888 "88 888 
-                                                            88P         
-                                                            8"          ''' , '''
+dMMMMP" dMP dMP  VMMMP" dMP dMMMMP" dMP dMP dMP dMP dMP VMMMP" dMP dMP    ''' , '''
  @@@@@@@  @@@@@@@   @@@@@@  @@@ @@@@@@@  @@@  @@@ @@@ @@@  @@@     @@@  @@@@@@ 
  @@!  @@@ @@!  @@@ @@!  @@@ @@! @@!  @@@ @@!@!@@@ @@! @@!@!@@@     @@! @@!  @@@
  @!@  !@! @!@!!@!  @!@  !@! !!@ @!@  !@! @!@@!!@! !!@ @!@@!!@!     !!@ @!@!@!@!
@@ -230,11 +215,6 @@ Y888 888 888    Y888 888P 888 Y888 888 8b Y88b  888 888 888 888 ,ee 888
 / _` | '_/ _ \ / _` | .` | | ' \ | / _` |
 \__,_|_| \___/_\__,_|_|\_|_|_||_|/ \__,_|
                                |__/      ''' , '''
-                  ,                    
- _|   ,_   _  o  _| /|/\   o       o  _,  
-/ |  /  | / \_| / |  |  |  | /|/|  | / |  
-\/|_/   |/\_/ |/\/|_/|  |_/|/ | |_/|/\/|_/
-                                  (|      ''' , '''
      |        _)     |  \ |_)     _)      
   _` |  _| _ \ |  _` | .  | |   \  |  _` |
 \__,_|_| \___/_|\__,_|_|\_|_|_| _| |\__,_|
@@ -271,7 +251,7 @@ d)   DD r)      o)   OO i) d)   DD N)   nnn i) n)   NN      j) a)   A
   dBP dBP  dBP  BB  dBP.BP dBP dBP dBP dBP dBP dBP dBP dBP dB'dBP    dBP  BB
  dBBBBBP  dBP  dB' dBBBBP dBP dBBBBBP dBP dBP dBP dBP dBP dBBBBP    dBBBBBBB''' ]
 
-colors = [ 'red', 'green', 'yellow', 'blue', 'cyan']
+colors = ['green', 'yellow']
 
 from random import choice
 from termcolor import colored

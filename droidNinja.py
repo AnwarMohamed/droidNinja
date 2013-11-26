@@ -4,8 +4,10 @@
 from core.interpreter.interpreter import Interpreter
 from core.interpreter import banner 
 import os, argparse, sys
-import ConfigParser
 
+sys.path.append('core/thirdparty/axmlparser/')
+
+import ConfigParser
 config = ConfigParser.ConfigParser()
 
 parser = argparse.ArgumentParser()

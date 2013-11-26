@@ -6,7 +6,7 @@ class Apk(object):
 		self.__filename = None
 		self.__fileList = {}
 
-		if filename != None:
+		if filename is not None:
 			self.set_apk(filename)
 
 
