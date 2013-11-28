@@ -1,6 +1,6 @@
 import zipfile
 
-class Apk(object):
+class ApkFile(object):
 	def __init__(self, filename=None):
 		self.__file = None
 		self.__filename = None
@@ -17,11 +17,9 @@ class Apk(object):
 				if self.__validateApk(filename):
 					self.__file = zipfile.ZipFile(filename)
 					self.__filename = filename
-					print '[*] Apk file set to: ' + filename
-				else:
-					print '[x] Not a valid Apk file'
+
 		except IOError:
-			print '[x] Apk file not exist'
+			pass
 
 
 	def __validateApk(self, file):
@@ -58,3 +56,9 @@ class Apk(object):
 		if self.__file:
 			return '<Apk loaded=\'' + self.__filename + '\' files=' + str(len(self.__file.namelist())) + ' |>'
 		return '<Apk |>'
+
+	@property
+	def files(self):
+		if self.__file: return self.__file.namelist()
+		else: return []
+			

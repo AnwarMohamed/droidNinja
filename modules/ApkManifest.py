@@ -17,7 +17,6 @@ class ApkManifest(object):
 		if len(file) > 0:
 			self.__file = file
 			self.__decode()
-			print '[*] ApkManifest file set'
 
 	def set_filename(self, filename):
 		try:
@@ -25,10 +24,9 @@ class ApkManifest(object):
 				self.__file = file.read()
 				self.__filename = filename
 				self.__decode()
-				print '[*] ApkManifest file set to: ' + filename
 
 		except IOError:
-			print '[x] ApkManifest file not exist'
+			pass
 
 	def __repr__(self):
 		return self.__str__()
@@ -89,6 +87,14 @@ class ApkManifest(object):
 			return None
 
 	@property
+	def package_name(self):
+		try:
+			return re.search('package=".*?"', str(self.__xml.find("manifest")))\
+			.group().replace('"', '').replace("package=",'')
+		except:
+			return None
+
+	@property
 	def activities(self):
 		activities = []
 		if self.__xml:
@@ -99,3 +105,43 @@ class ApkManifest(object):
 				except:
 					pass
 		return activities
+
+	@property
+	def services(self):
+		services = []
+		if self.__xml:
+			for p in self.__xml.find_all('service'):
+				try:
+					res = re.search('name=".*?"', str(p)).group().replace('"', '').replace("name=",'')
+					if res: services.append(res)
+				except:
+					pass
+		return services
+
+	@property
+	def receivers(self):
+		receivers = []
+		if self.__xml:
+			for p in self.__xml.find_all('receiver'):
+				try:
+					res = re.search('name=".*?"', str(p)).group().replace('"', '').replace("name=",'')
+					if res: receivers.append(res)
+				except:
+					pass
+		return receivers
+
+	@property
+	def version_name(self):
+		try:
+			return re.search('versionName=".*?"', str(self.__xml.find("manifest")))\
+			.group().replace('"', '').replace("versionName=",'')
+		except:
+			return None
+
+	@property
+	def version_code(self):
+		try:
+			return re.search('versionCode=".*?"', str(self.__xml.find("manifest")))\
+			.group().replace('"', '').replace("versionCode=",'')
+		except:
+			return None

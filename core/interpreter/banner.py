@@ -262,5 +262,5 @@ def randomGraphic():
 def devInfo():
 	return  '''
        =[ ''' + colored('droidNinja v0.1-dev', 'yellow') + '''
-+ -- --=[ Android Exploitation Framework
++ -- --=[ Android Exploitation & Reversing Framework
        =[ Anwar Mohamed \'anwarelmakrahy@gmail.com\''''
