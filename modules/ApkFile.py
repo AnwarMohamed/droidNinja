@@ -62,3 +62,8 @@ class ApkFile(object):
 		if self.__file: return self.__file.namelist()
 		else: return []
 			
+	class __metaclass__(type):
+		def __str__(self):
+			return self.__repr__
+		def __repr__(self):
+			return "<ApkManifest 'extracts android application files from apk archieve' |>"

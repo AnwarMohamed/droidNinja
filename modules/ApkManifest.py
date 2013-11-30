@@ -145,3 +145,9 @@ class ApkManifest(object):
 			.group().replace('"', '').replace("versionCode=",'')
 		except:
 			return None
+
+	class __metaclass__(type):
+		def __str__(self):
+			return self.__repr__
+		def __repr__(self):
+			return "<ApkManifest 'decodes AndroidManifest.xml files into readable form' |>"
