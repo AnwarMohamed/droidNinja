@@ -24,8 +24,8 @@ class DexStruct:
 			self.string_ids_off	= int(bin[60:64  ][::-1].encode('hex'), 16)
 			self.type_ids_size 	= int(bin[64:68  ][::-1].encode('hex'), 16)
 			self.type_ids_off 	= int(bin[68:72  ][::-1].encode('hex'), 16)
-			self.protoIdsSize	= int(bin[72:76  ][::-1].encode('hex'), 16)
-			self.protoIdsOff	= int(bin[76:80  ][::-1].encode('hex'), 16)
+			self.proto_ids_size	= int(bin[72:76  ][::-1].encode('hex'), 16)
+			self.proto_ids_off	= int(bin[76:80  ][::-1].encode('hex'), 16)
 			self.field_ids_size	= int(bin[80:84  ][::-1].encode('hex'), 16)
 			self.field_ids_off 	= int(bin[84:88  ][::-1].encode('hex'), 16)
 			self.method_ids_size= int(bin[88:92  ][::-1].encode('hex'), 16)
@@ -160,6 +160,88 @@ class DexFile(object):
 
 					class_data['instance_fields'] = instance_fields
 
+					direct_methods = []
+					currIdx = 0
+					for j in range(direct_methods_size):
+						direct_method = {}
+						index, step = leb128_decode(self.__file[offset:])
+						currIdx += index
+						offset += step
+
+						direct_method['name'] = self.strings_table[int(self.__file[self.header.method_ids_off + (currIdx * 8) + 4: \
+							self.header.method_ids_off + (currIdx * 8) + 8][::-1].encode('hex'), 16)]
+						
+						proto_index = int(self.__file[self.header.method_ids_off + (currIdx * 8) + 2: \
+							self.header.method_ids_off + (currIdx * 8) + 4][::-1].encode('hex'), 16)
+						
+						type_index = int(self.__file[self.header.proto_ids_off + proto_index * 12 + 4: \
+							self.header.proto_ids_off + proto_index * 12 + 8][::-1].encode('hex'), 16)
+						
+						string_index = int(self.__file[self.header.type_ids_off + type_index*4: \
+							self.header.type_ids_off + type_index*4 + 4][::-1].encode('hex'), 16)
+												
+						direct_method['return_type'] = self.strings_table[string_index] 
+
+						#type_index = int(self.__file[self.header.method_ids_off + currIdx * 8: \
+						#	self.header.method_ids_off + (currIdx * 8) + 2][::-1].encode('hex'), 16)
+
+						#string_index = int(self.__file[self.header.type_ids_off + type_index*4: \
+						#	self.header.type_ids_off + type_index*4 + 4][::-1].encode('hex'), 16)
+
+						#direct_method['type'] = self.strings_table[string_index] 
+
+
+						index, step = leb128_decode(self.__file[offset:])
+						direct_method['access_flags'] = hex(index) 
+						offset += step
+
+						index, step = leb128_decode(self.__file[offset:]) 
+						offset += step
+						direct_methods.append(direct_method)
+
+					class_data['direct_methods'] = direct_methods
+
+					virtual_methods = []
+					currIdx = 0
+					for j in range(virtual_methods_size):
+						virtual_method = {}
+						index, step = leb128_decode(self.__file[offset:])
+						currIdx += index
+						offset += step
+
+						virtual_method['name'] = self.strings_table[int(self.__file[self.header.method_ids_off + (currIdx * 8) + 4: \
+							self.header.method_ids_off + (currIdx * 8) + 8][::-1].encode('hex'), 16)]
+						
+						proto_index = int(self.__file[self.header.method_ids_off + (currIdx * 8) + 2: \
+							self.header.method_ids_off + (currIdx * 8) + 4][::-1].encode('hex'), 16)
+						
+						type_index = int(self.__file[self.header.proto_ids_off + proto_index * 12 + 4: \
+							self.header.proto_ids_off + proto_index * 12 + 8][::-1].encode('hex'), 16)
+						
+						string_index = int(self.__file[self.header.type_ids_off + type_index*4: \
+							self.header.type_ids_off + type_index*4 + 4][::-1].encode('hex'), 16)
+												
+						virtual_method['return_type'] = self.strings_table[string_index] 
+
+						#type_index = int(self.__file[self.header.method_ids_off + currIdx * 8: \
+						#	self.header.method_ids_off + (currIdx * 8) + 2][::-1].encode('hex'), 16)
+
+						#string_index = int(self.__file[self.header.type_ids_off + type_index*4: \
+						#	self.header.type_ids_off + type_index*4 + 4][::-1].encode('hex'), 16)
+
+						#virtual_method['type'] = self.strings_table[string_index] 
+
+
+						index, step = leb128_decode(self.__file[offset:])
+						virtual_method['access_flags'] = hex(index) 
+						offset += step
+
+						index, step = leb128_decode(self.__file[offset:]) 
+						offset += step
+						print virtual_method
+						virtual_methods.append(virtual_method)
+
+					class_data['virtual_methods'] = virtual_methods
 				defs['data'] = class_data
 				self.classes.append(defs)
 
