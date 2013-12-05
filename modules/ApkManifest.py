@@ -1,3 +1,8 @@
+__author__ = "Anwar Mohamed"
+__copyright__ = "Copyright (C) 2013 Anwar Mohamed"
+__license__ = "Public Domain"
+__version__ = "1.0"
+
 import axmlprinter
 from xml.dom import minidom
 from bs4 import BeautifulSoup

@@ -1,9 +1,18 @@
+__author__ = "Anwar Mohamed"
+__copyright__ = "Copyright (C) 2013 Anwar Mohamed"
+__license__ = "Public Domain"
+__version__ = "1.0"
+
 from termcolor import colored
 from colorama import init, Fore, Back, Style
 
 import sys, os, code
 
-import readline
+try:
+	import readline
+except ImportError:
+	import pyreadline as readline
+
 import pkgutil
 import sys
 
