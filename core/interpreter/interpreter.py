@@ -16,6 +16,8 @@ except ImportError:
 import pkgutil
 import sys
 
+import core.elements
+
 class Interpreter(object):
 	def __init__(self):
 		
@@ -24,8 +26,11 @@ class Interpreter(object):
 			readline.read_history_file(self.__HISTORY_FILENAME)
 
 		sys.ps1 = '\x01\033[01;34m\x02>>> \x01\033[00m\x02'
-		self._modules = self.load_all_modules()
-		self._console = code.InteractiveConsole(self._modules)
+		self.__modules = {}
+		for dir in self.modules_dirs: 
+			self.__modules.update(self.load_all_modules(dir))
+
+		self.__console = code.InteractiveConsole(self.__modules)
 		
 		import rlcompleter
 		readline.set_completer(self.tab_completer)
@@ -34,20 +39,19 @@ class Interpreter(object):
 		import atexit
 		atexit.register(self.exit)
 
-	def load_all_modules(self):
-		import modules
+	def load_all_modules(self, dir):
 		modDict = {}
-		for importer, package_name, _ in list(pkgutil.iter_modules(modules.__path__)):
-			full_package_name = '%s.%s' % ("modules", package_name)
+		for importer, package_name, _ in list(pkgutil.iter_modules([os.getcwd() + '/' + dir])):
+			full_package_name = '%s.%s' % (dir.replace('/', '.'), package_name)
 			if full_package_name not in sys.modules:
 				modDict[package_name] = getattr(importer.find_module(package_name).load_module(full_package_name), package_name)
 		return modDict
 
 	def start(self):
-		self._console.interact("")
+		self.__console.interact("")
 
 	def tab_completer(self, text, state):
-		options = [i for i in self._modules.keys() if i.startswith(text) and i != "__builtins__"]
+		options = [i for i in self.__modules.keys() if i.startswith(text) and i != "__builtins__"]
 		if state < len(options):
 			return options[state]
 		else:
@@ -55,3 +59,10 @@ class Interpreter(object):
 
 	def exit(self):
 		readline.write_history_file(self.__HISTORY_FILENAME)
+
+	@property
+	def modules_dirs(self):
+		return [
+		'core/struct/dex',
+		'core/elements',
+		]

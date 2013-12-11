@@ -4,59 +4,12 @@ __license__ = "Public Domain"
 __version__ = "1.0"
 
 from struct import unpack
+from core.struct.dex.DexHeader import DexHeader
+from core.struct.dex.DexCodeDisasm import DexCodeDisasm
+from core.struct.dex.DexOptHeader import DexOptHeader
+from core.struct.dex.DexClassDef import DexClassDef
 
-class DexStruct:
-
-	NO_INDEX = 0xffffffff
-
-	class DexHeader:
-		def __init__(self, bin):
-			self.magic 			= 	  bin[0:8    ]
-			self.checksum 		= 	  bin[8:12   ][::-1].encode('hex')
-			self.signature	 	= 	  bin[12:32  ].encode('hex')
-			self.file_size  	= int(bin[32:36  ][::-1].encode('hex'), 16)
-			self.header_size	= int(bin[36:40  ][::-1].encode('hex'), 16)
-			self.endian_tag		= 	  bin[40:44  ].encode('hex')
-			self.link_size		= int(bin[44:48  ][::-1].encode('hex'), 16)
-			self.link_off		= int(bin[48:52  ][::-1].encode('hex'), 16)
-			self.mapOff			= int(bin[52:56  ][::-1].encode('hex'), 16)
-			self.string_ids_size= int(bin[56:60  ][::-1].encode('hex'), 16)
-			self.string_ids_off	= int(bin[60:64  ][::-1].encode('hex'), 16)
-			self.type_ids_size 	= int(bin[64:68  ][::-1].encode('hex'), 16)
-			self.type_ids_off 	= int(bin[68:72  ][::-1].encode('hex'), 16)
-			self.proto_ids_size	= int(bin[72:76  ][::-1].encode('hex'), 16)
-			self.proto_ids_off	= int(bin[76:80  ][::-1].encode('hex'), 16)
-			self.field_ids_size	= int(bin[80:84  ][::-1].encode('hex'), 16)
-			self.field_ids_off 	= int(bin[84:88  ][::-1].encode('hex'), 16)
-			self.method_ids_size= int(bin[88:92  ][::-1].encode('hex'), 16)
-			self.method_ids_off = int(bin[92:96	 ][::-1].encode('hex'), 16)
-			self.class_defs_size= int(bin[96:100 ][::-1].encode('hex'), 16)
-			self.class_defs_off = int(bin[100:104][::-1].encode('hex'), 16)
-			self.data_size		= int(bin[104:108][::-1].encode('hex'), 16)
-			self.data_off 		= int(bin[108:112][::-1].encode('hex'), 16)
-
-	class DexOptHeader:
-		def __init__(self, bin):
-			self.magic 			= 	  bin[0:8  ]
-			self.dex_offset 	= int(bin[8:12 ][::-1].encode('hex'), 16)
-			self.dex_length 	= int(bin[12:16][::-1].encode('hex'), 16)
-			self.deps_offset	= int(bin[16:20][::-1].encode('hex'), 16)
-			self.deps_length	= int(bin[20:24][::-1].encode('hex'), 16)
-			self.opt_offset		= int(bin[24:28][::-1].encode('hex'), 16)
-			self.opt_length		= int(bin[28:32][::-1].encode('hex'), 16)
-			self.flags			= 	  bin[32:36][::-1].encode('hex')
-			self.checksum		= 	  bin[36:40][::-1].encode('hex')
-
-	class DexClassDef:
-		def __init__(self, bin):
-			self.classIdx 		= int(bin[0:4  ][::-1].encode('hex'), 16)
-			self.accessFlags	= hex(int(bin[4:8  ][::-1].encode('hex'), 16))
-			self.superclassIdx	= int(bin[8:12 ][::-1].encode('hex'), 16)
-			self.interfacesOff	= int(bin[12:16][::-1].encode('hex'), 16)
-			self.sourceFileIdx	= int(bin[16:20][::-1].encode('hex'), 16)
-			self.annotationsOff	= int(bin[20:24][::-1].encode('hex'), 16)
-			self.classDataOff	= int(bin[24:28][::-1].encode('hex'), 16)
-			self.staticValuesOff= int(bin[28:32][::-1].encode('hex'), 16)
+NO_INDEX = 0xffffffff
 
 
 class DexFile(object):
@@ -90,7 +43,7 @@ class DexFile(object):
 
 	def __decode(self):
 		if len(self.__file) >= 114 and self.__file[0:8] == 'dex\n035\x00':
-			self.header = DexStruct.DexHeader(self.__file[:114])		
+			self.header = DexHeader(self.__file[:114])		
 			
 			if self.header.file_size != len(self.__file): return False
 
@@ -102,12 +55,12 @@ class DexFile(object):
 			#print len(self.strings_table)
 			for i in range(self.header.class_defs_size):
 				defs = {}
-				class_def = DexStruct.DexClassDef(self.__file[self.header.class_defs_off + i*32: self.header.class_defs_off + (i+1)*32])
+				class_def = DexClassDef(self.__file[self.header.class_defs_off + i*32: self.header.class_defs_off + (i+1)*32])
 
-				defs['superclass'] = self.strings_table[int(self.__file[self.header.type_ids_off + class_def.superclassIdx*4: self.header.type_ids_off + (class_def.superclassIdx + 1)*4][::-1].encode('hex'), 16)] if class_def.sourceFileIdx != DexStruct.NO_INDEX else None
+				defs['superclass'] = self.strings_table[int(self.__file[self.header.type_ids_off + class_def.superclassIdx*4: self.header.type_ids_off + (class_def.superclassIdx + 1)*4][::-1].encode('hex'), 16)] if class_def.sourceFileIdx != NO_INDEX else None
 				defs['descriptor'] = self.strings_table[int(self.__file[self.header.type_ids_off + class_def.classIdx*4: self.header.type_ids_off + (class_def.classIdx + 1)*4][::-1].encode('hex'), 16)]
 				defs['access_flags'] = class_def.accessFlags
-				defs['source_file'] = self.strings_table[class_def.sourceFileIdx] if class_def.sourceFileIdx != DexStruct.NO_INDEX else None
+				defs['source_file'] = self.strings_table[class_def.sourceFileIdx] if class_def.sourceFileIdx != NO_INDEX else None
 
 				class_data = {}
 				if class_def.classDataOff != 0:
@@ -160,6 +113,7 @@ class DexFile(object):
 
 					class_data['instance_fields'] = instance_fields
 
+
 					direct_methods = []
 					currIdx = 0
 					for j in range(direct_methods_size):
@@ -195,8 +149,13 @@ class DexFile(object):
 						direct_method['access_flags'] = hex(index) 
 						offset += step
 
-						index, step = leb128_decode(self.__file[offset:]) 
+						code_offset, step = leb128_decode(self.__file[offset:]) 
 						offset += step
+
+						#direct_method['code_disasm'] = \
+						#DexCodeDisasm(code_offset).map \
+						#if code_offset != 0 else None
+
 						direct_methods.append(direct_method)
 
 					class_data['direct_methods'] = direct_methods
@@ -236,9 +195,13 @@ class DexFile(object):
 						virtual_method['access_flags'] = hex(index) 
 						offset += step
 
-						index, step = leb128_decode(self.__file[offset:]) 
+						code_offset, step = leb128_decode(self.__file[offset:]) 
 						offset += step
-						print virtual_method
+
+						#virtual_method['code_disasm'] = \
+						#DexCodeDisasm(code_offset).map \
+						#if code_offset != 0 else None
+
 						virtual_methods.append(virtual_method)
 
 					class_data['virtual_methods'] = virtual_methods

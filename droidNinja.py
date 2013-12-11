@@ -9,6 +9,7 @@ __version__ = "1.0"
 from core.interpreter.interpreter import Interpreter
 from core.interpreter import banner 
 import os, argparse, sys
+from gui.GuiApp import GuiApp
 
 sys.path.append('core/thirdparty/axmlparser/')
 
@@ -17,11 +18,15 @@ config = ConfigParser.ConfigParser()
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", "--interactive",help="interactive mode",action="store_true", default=1)
+parser.add_argument("-g", "--gui",help="gui mode",action="store_true", default=0)
 args = parser.parse_args()
 
-if args.interactive:
-	interpreter = Interpreter()
+if args.gui:
+	gui = GuiApp();
+	gui.run()
 
+elif args.interactive:
+	interpreter = Interpreter()
 	os.system('clear')
 	print banner.randomGraphic()
 	print banner.devInfo()
